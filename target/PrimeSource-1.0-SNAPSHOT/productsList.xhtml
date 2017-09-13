@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" http-equiv="X-UA-Conpatible" />
+        
+    </h:head>
+    <h:body>
+        <h:form id="form1"> 
+            <p:dataTable value="#{productsManagedBean.productsList()}" var="product" paginator="true" rows="3"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="3,5,10" widgetVar="50" editable="true" >
+                <f:facet name="header">  
+                    Продукты  
+                </f:facet>
+                <p:ajax event="rowEdit" listener="#{productsManagedBean.editProductRecord(product)}" />  
+                <p:column sortBy="#{product.contract}">
+                    <f:facet name="header">  
+                        <h:outputText value="Номер договора" />  
+                    </f:facet>
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{product.contract}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <h:inputText value="#{product.contract}"/>
+                        </f:facet>
+                    </p:cellEditor>                    
+                </p:column>
+                <p:column sortBy="#{product.type}">
+                    <f:facet name="header">  
+                        <h:outputText value="Тип продукта" />  
+                    </f:facet>
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{product.type}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <h:inputText value="#{product.type}"/>
+                        </f:facet>
+                    </p:cellEditor>                    
+                </p:column>
+                <p:column sortBy="#{product.userFIO}">
+                    <f:facet name="header">  
+                        <h:outputText value="Клиент" />  
+                    </f:facet>
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{product.userFIO}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:autoComplete value="#{product.userFIO}" completeMethod="#{product.allUsers()}"></p:autoComplete>
+                        </f:facet>
+                    </p:cellEditor>                    
+                </p:column>
+                <p:column sortBy="#{product.contract}">  
+                    <f:facet name="header">  
+                        <h:outputText value="Дата начала действия договора" />  
+                    </f:facet>
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{product.startContartDate}">  
+                                <f:convertDateTime type="date" pattern="yyyy-MM-dd" />  
+                            </h:outputText>
+                        </f:facet>
+                        <f:facet name="input">
+                            <h:inputText value="#{product.startContartDate}">  
+                                <f:convertDateTime type="date" pattern="yyyy-MM-dd" />  
+                            </h:inputText>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                <p:column headerText="Edit">  
+                   <p:rowEditor /> 
+                </p:column>  
+                <p:column headerText="Delete" style="text-align: center">  
+                    <p:commandButton value="Delete" icon="ui-icon-trash" type="button" onclick="PF('confirmDialog').show()" />  
+                    <p:confirmDialog message="Are you sure you want to delete this record?Record once deleted can not be retrieved." header="Deleting" severity="alert" widgetVar="confirmDialog">  
+                        <p:commandButton value="Yes Sure" action="#{productsManagedBean.deleteProductRecord(product.id)}" oncomplete="PF('confirmDialog').hide()" />  
+                        <p:commandButton value="Not Yet" onclick="PF('confirmDialog').hide();" type="button" />  
+                    </p:confirmDialog>  
+                </p:column>
+            </p:dataTable>
+            <br/><br/>
+            <center>
+            <p:panelGrid columns="2">
+                    <h:outputLabel for="contract" value="Номер договора: " />
+                    <p:inputText  value="#{productsManagedBean.contract}"/>
+                    <h:outputLabel for="type" value="Тип продукта: " />
+                    <p:inputText value="#{productsManagedBean.type}"/>
+                    <h:outputLabel for="userId" value="Клиент: " />
+                    
+                        <p:autoComplete value="#{productsManagedBean.userFIO}" completeMethod="#{productsManagedBean.allUsers()}"></p:autoComplete>
+                                       
+                    <h:outputLabel for="startContartDate" value="Дата начала: " />
+                    <p:calendar id="dop" value="#{productsManagedBean.startContartDate}" label="DatePosted:" 
+                                    pattern="yyyy-MM-dd" effect="slideDown" 
+                                    />
+                    <f:facet name="footer">
+                        <h:commandButton value="Добавить" action="#{productsManagedBean.saveProductDetails(productsManagedBean)}"/>
+                    </f:facet>
+            </p:panelGrid>
+                
+            </center>              
+        </h:form>
+    </h:body>
+</html>
+
